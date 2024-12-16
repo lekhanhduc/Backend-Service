@@ -1,6 +1,7 @@
 package vn.khanhduc.backendservice.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import vn.khanhduc.backendservice.dto.request.UserCreationRequest;
 import vn.khanhduc.backendservice.dto.response.MockupUserResponse;
 import vn.khanhduc.backendservice.dto.response.ResponseData;
 import vn.khanhduc.backendservice.dto.response.UserCreationResponse;
+import vn.khanhduc.backendservice.dto.response.UserResponse;
 import vn.khanhduc.backendservice.service.UserService;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
@@ -68,6 +70,16 @@ public class UserController {
                 .code(HttpStatus.CREATED.value())
                 .message("User created successfully")
                 .data(userService.save(request))
+                .build();
+    }
+
+    @GetMapping("/{userId}")
+    ResponseData<UserResponse> getUserById(@PathVariable @Min(1) Long userId) {
+        var result = userService.findById(userId);
+
+        return ResponseData.<UserResponse>builder()
+                .code(HttpStatus.OK.value())
+                .data(result)
                 .build();
     }
 

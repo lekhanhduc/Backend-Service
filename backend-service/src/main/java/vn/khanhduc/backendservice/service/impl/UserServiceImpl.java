@@ -3,6 +3,7 @@ package vn.khanhduc.backendservice.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,8 +13,11 @@ import vn.khanhduc.backendservice.dto.request.UserUpdateRequest;
 import vn.khanhduc.backendservice.dto.response.UserCreationResponse;
 import vn.khanhduc.backendservice.dto.response.UserPageResponse;
 import vn.khanhduc.backendservice.dto.response.UserResponse;
+import vn.khanhduc.backendservice.exception.AppException;
+import vn.khanhduc.backendservice.exception.ErrorCode;
 import vn.khanhduc.backendservice.exception.InvalidDataException;
 import vn.khanhduc.backendservice.exception.ResourceNotFoundException;
+import vn.khanhduc.backendservice.mapper.UserMapper;
 import vn.khanhduc.backendservice.model.AddressEntity;
 import vn.khanhduc.backendservice.model.UserEntity;
 import vn.khanhduc.backendservice.repository.AddressRepository;
@@ -34,10 +38,12 @@ public class UserServiceImpl implements UserService {
     private final EmailService emailService;
 
     @Override
+    @PreAuthorize("isAuthenticated() && hasAuthority('USER')")
     public UserResponse findById(Long id) {
         log.info("Find user by id: {}", id);
 
-        UserEntity userEntity = getUserEntity(id);
+        UserEntity userEntity = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         return UserResponse.builder()
                 .id(id)
@@ -115,7 +121,6 @@ public class UserServiceImpl implements UserService {
             log.info("Saved addresses: {}", addresses);
         }
 
-        // Send email verification
         emailService.emailVerification(req.getEmail(), req.getUsername());
 
         return UserCreationResponse.builder()
@@ -133,6 +138,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(UserUpdateRequest req) {
 
+    }
+
+    @Override
+//    @PreAuthorize("hasAuthority('ADMIN')")
+    public UserResponse userDetail(Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        return UserMapper.toUserResponse(user);
     }
 
     private static UserPageResponse getUserPageResponse(int page, int size, Page<UserEntity> userEntities) {
@@ -160,7 +174,4 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
-    private UserEntity getUserEntity(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-    }
 }

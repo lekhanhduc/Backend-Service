@@ -17,10 +17,10 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(AppException.class)
-    ResponseEntity<?> handlingAppException(AppException e) {
+    ResponseEntity<ResponseData<Object>> handlingAppException(AppException e) {
         ErrorCode errorCode = e.getErrorCode();
 
-        ResponseData<?> responseData = ResponseData.builder()
+        ResponseData<Object> responseData = ResponseData.builder()
                 .code(errorCode.getCode())
                 .message(errorCode.getMessage())
                 .build();
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    ResponseEntity<?> handlingMethodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) {
+    ResponseEntity<ErrorResponse> handlingMethodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) {
         BindingResult bindingResult = e.getBindingResult();
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         List<String> errors = fieldErrors.stream().map(FieldError::getDefaultMessage).toList();
@@ -42,5 +42,18 @@ public class GlobalExceptionHandler {
         errorResponse.setMessage(errors.size() > 1 ? String.valueOf(errors) : errors.getFirst());
 
         return ResponseEntity.status(HttpStatus.OK).body(errorResponse);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    ResponseEntity<ErrorResponse> handlingResourceNotFoundException(ResourceNotFoundException e, HttpServletRequest request) {
+        ErrorResponse response = new ErrorResponse();
+
+        response.setTimestamp(new Date());
+        response.setStatus(HttpStatus.NOT_FOUND.value());
+        response.setPath(request.getRequestURI());
+        response.setError(HttpStatus.NOT_FOUND.getReasonPhrase());
+        response.setMessage(e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

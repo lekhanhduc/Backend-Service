@@ -17,7 +17,6 @@ import vn.khanhduc.backendservice.service.JwtService;
 import java.security.Key;
 import java.util.*;
 import java.util.function.Function;
-
 import static vn.khanhduc.backendservice.common.TokenType.ACCESS_TOKEN;
 import static vn.khanhduc.backendservice.common.TokenType.REFRESH_TOKEN;
 

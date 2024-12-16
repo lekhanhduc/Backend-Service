@@ -32,11 +32,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
+            log.info("Authenticated authorities: {}", authentication.getAuthorities());
+
             authorities.add(authentication.getAuthorities().toString());
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.info("Authorities {}", authorities);
 
-        } catch (AppException e) {
+        } catch (Exception e) {
             log.info(e.getMessage());
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }

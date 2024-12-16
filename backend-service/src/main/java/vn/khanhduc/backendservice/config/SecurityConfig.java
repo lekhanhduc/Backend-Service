@@ -24,6 +24,11 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
+    private static final String[] whiteList = {
+            "/api/v1/auth/**",
+            "/api/v1/user/add"
+    };
+
     private final CustomizerFilter customizerFilter;
     private final UserServiceDetail userServiceDetail;
 
@@ -36,7 +41,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
 
-        http.authorizeHttpRequests(request -> request.requestMatchers("/api/v1/auth/**", "/api/v1/user/add").permitAll())
+        http.authorizeHttpRequests(request -> request.requestMatchers(whiteList).permitAll()
+                        .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(customizerFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS));

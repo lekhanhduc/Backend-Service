@@ -15,4 +15,6 @@ public interface UserService {
 
     void update(UserUpdateRequest req);
 
+    UserResponse userDetail(Long userId);
+
 }

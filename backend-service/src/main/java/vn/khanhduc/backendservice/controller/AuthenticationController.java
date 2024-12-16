@@ -21,7 +21,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/sign-in")
-    private ResponseData<TokenResponse> getAccessToken(@RequestBody SignInRequest request) {
+    ResponseData<TokenResponse> getAccessToken(@RequestBody SignInRequest request) {
         log.info("SignIn Request");
        var tokenResponse = authenticationService.getAccessToken(request);
 
@@ -32,7 +32,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh")
-    private ResponseData<TokenResponse> getRefreshToken(@RequestBody String refreshToken) {
+    ResponseData<TokenResponse> getRefreshToken(@RequestBody String refreshToken) {
         log.info("Refresh Request");
 
         TokenResponse tokenResponse = TokenResponse.builder()

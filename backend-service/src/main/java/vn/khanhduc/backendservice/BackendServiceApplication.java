@@ -1,6 +1,5 @@
 package vn.khanhduc.backendservice;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,11 +11,6 @@ public class BackendServiceApplication {
     private String jwt;
     public static void main(String[] args) {
         SpringApplication.run(BackendServiceApplication.class, args);
-    }
-
-    @PostConstruct
-    public void printJwt() {
-        System.out.println("jwt --> " +jwt);
     }
 
 }

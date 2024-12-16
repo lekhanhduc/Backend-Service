@@ -2,6 +2,7 @@ package vn.khanhduc.backendservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +20,7 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Slf4j
 public class UserEntity extends AbstractEntity<Long> implements UserDetails{
 
     @Column(name = "first_name")
@@ -70,8 +72,9 @@ public class UserEntity extends AbstractEntity<Long> implements UserDetails{
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<Role> roleList =  roles.stream().map(UserHasRole::getRole).toList();
-        List<String> roleName = roleList.stream().map(Role::getName).toList();
-        return roleName.stream().map(SimpleGrantedAuthority::new).toList();
+        List<String> roleNames = roleList.stream().map(Role::getName).toList();
+        log.info("User roles: {}", roleNames);
+        return roleNames.stream().map(SimpleGrantedAuthority::new).toList();
     }
 
     @Override

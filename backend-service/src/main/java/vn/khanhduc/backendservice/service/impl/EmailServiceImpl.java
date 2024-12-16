@@ -57,7 +57,7 @@ public class EmailServiceImpl implements EmailService {
                 log.error("Email sent failed");
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
