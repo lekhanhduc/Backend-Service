@@ -1,0 +1,48 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+#    url: jdbc:mysql://${DATABASE_HOST:localhost}:${DATABASE_PORT:3306}/backend_service
+    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/backend_service
+    username: ${DATABASE_USERNAME:root}
+    password: ${DATABASE_PASSWORD:123456}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  sendgrid:
+    api-key: ${SENDGRID_API_KEY:DUMMY-SENDGRID-API-KEY}
+    fromEmail: lekhanhduccc@gmail.com
+    templateId: d-e950e6cd6ca4484f98cbac6d6668367d
+    verificationLink: http://localhost:8080/user/confirm-email
+
+#springdoc:
+#  api-docs:
+#    enabled: true
+#  swagger-ui:
+#    enabled: true
+#openapi:
+#  service:
+#    api-docs: backend-service
+#    title: Backend API Document
+#    version: v1.0.0
+#    server: http://localhost:8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        #include: health, prometheus, metrics
+
+jwt:
+  secretKey: abc123
+  expiryMinutes: 10
+  expiryDay: 14
+  accessKey: GT4ERGLWmylu/i4xhO/n5Vrnj/xMl6qxwI49m+ekl+o=
+  refreshKey: 2d4OgoSeDlrVSDLlK/f2sJYwkVb/Yow34IxHS1mMq5g=
