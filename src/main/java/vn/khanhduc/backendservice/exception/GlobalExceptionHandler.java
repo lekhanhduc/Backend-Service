@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
         errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponse.setPath(request.getRequestURI());
         errorResponse.setError(HttpStatus.BAD_REQUEST.getReasonPhrase());
-        errorResponse.setMessage(errors.size() > 1 ? String.valueOf(errors) : errors.getFirst());
+        errorResponse.setMessage(errors.size() > 1 ? String.valueOf(errors) : errors.get(0));
 
         return ResponseEntity.status(HttpStatus.OK).body(errorResponse);
     }
