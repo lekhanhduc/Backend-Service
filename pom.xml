@@ -161,7 +161,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>2.8.0</version>
                 <configuration>
                     <source>17</source>
                     <target>17</target>
@@ -190,6 +190,7 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
+                <version>3.4.4</version>
                 <configuration>
                     <from>
                         <image>openjdk:17-alpine</image>
